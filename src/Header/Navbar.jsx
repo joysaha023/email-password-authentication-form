@@ -45,16 +45,14 @@ const Navbar = () => {
               {links}
             </ul>
           </div>
-          <a className="btn btn-ghost text-xl">daisyUI</a>
+          <a className="btn btn-ghost text-xl">Email Auth</a>
         </div>
-        <div className="navbar-center hidden lg:flex">
+        <div className="navbar-end gap-4 hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
            {links}
           </ul>
         </div>
-        <div className="navbar-end">
-          <a className="btn">Button</a>
-        </div>
+        
       </div>
     </div>
   );
