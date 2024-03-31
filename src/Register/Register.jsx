@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import auth from "../firebase/firebase.config";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const [registerError, setErrorRegister] = useState("");
@@ -12,7 +13,8 @@ const Register = () => {
         e.preventDefault();
         const email = e.target.email.value;
         const password = e.target.password.value;
-        console.log(email, password)
+        const accepted = e.target.terms.checked;
+        console.log(email, password, accepted)
 
         setErrorRegister('');
         setRegisterSuccess('');
@@ -26,7 +28,10 @@ const Register = () => {
           setErrorRegister('Your password should have at least one uppercase');
           return;
         }
-
+        else if(!accepted){
+          setErrorRegister('Plese accept our terms and condition');
+          return;
+        }
 
 
     
@@ -35,7 +40,13 @@ const Register = () => {
         createUserWithEmailAndPassword(auth, email, password)
         .then(result => {
             console.log(result.user);
-            setRegisterSuccess("User created successfully")
+            setRegisterSuccess("User created successfully");
+
+
+            sendEmailVerification(result.user)
+            .then(() => {
+              alert('Check your email and verify mail')
+            })
         })
         .catch(error => {
             console.error(error)
@@ -48,7 +59,7 @@ const Register = () => {
   return (
     <div className="text-center my-5">
       <h2 className="text-4xl font-bold">Please Register</h2>
-      <form onSubmit={handleRegister} className="w-1/4 mx-auto border p-4 rounded-lg bg-gray-100 space-y-5 mt-5">
+      <form onSubmit={handleRegister} className="w-1/4 mx-auto border p-4 rounded-lg bg-gray-100 space-y-5 my-5">
         <label className="input input-bordered flex items-center gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -66,6 +77,10 @@ const Register = () => {
           <input type={ showPassword ? "text" : "password"} name="password" className="grow" placeholder="*****" />
           <span className="relative -left-4 text-gray-600" onClick={() => setShowPass(!showPassword)}>{ showPassword ? <FaRegEyeSlash /> : <FaRegEye />}</span>
         </label>
+        <div>
+          <input type="checkbox" name="terms" id="terms" />
+          <label className="ml-2" htmlFor="terms">Accept Our <a href="">Terms and conditions</a></label>
+        </div>
         <input
           type="submit"
           value="Register"
@@ -78,6 +93,7 @@ const Register = () => {
       {
         registerSuccess && <p className="text-green-500">{registerSuccess}</p>
       }
+      <p>Already have an account please <Link to={"/login"} className="text-blue-600 underline">Login</Link></p>
     </div>
   );
 };
