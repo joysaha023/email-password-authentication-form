@@ -34,10 +34,6 @@ const Register = () => {
           return;
         }
 
-
-    
-
-
         createUserWithEmailAndPassword(auth, email, password)
         .then(result => {
             console.log(result.user);
