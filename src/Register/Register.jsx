@@ -1,25 +1,35 @@
 import React, { useState } from "react";
 import auth from "../firebase/firebase.config";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 
 const Register = () => {
   const [registerError, setErrorRegister] = useState("");
   const [registerSuccess, setRegisterSuccess] = useState("");
+  const [showPassword, setShowPass] = useState(false);
 
     const handleRegister = e => {
         e.preventDefault();
         const email = e.target.email.value;
         const password = e.target.password.value;
         console.log(email, password)
+
+        setErrorRegister('');
+        setRegisterSuccess('');
+
+
         if(password.length < 6){
           setErrorRegister('Password should be a 6 character or longer');
+          return;
+        }
+        else if(!/[A-Z]/.test(password)){
+          setErrorRegister('Your password should have at least one uppercase');
           return;
         }
 
 
 
-        setErrorRegister('');
-        setRegisterSuccess('');
+    
 
 
         createUserWithEmailAndPassword(auth, email, password)
@@ -53,7 +63,8 @@ const Register = () => {
         </label>
         <label className="input input-bordered flex items-center gap-2">
           Pass:
-          <input type="password" name="password" className="grow" placeholder="*****" />
+          <input type={ showPassword ? "text" : "password"} name="password" className="grow" placeholder="*****" />
+          <span className="relative -left-4 text-gray-600" onClick={() => setShowPass(!showPassword)}>{ showPassword ? <FaRegEyeSlash /> : <FaRegEye />}</span>
         </label>
         <input
           type="submit"
