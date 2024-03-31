@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import auth from "../firebase/firebase.config";
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 
@@ -11,10 +11,11 @@ const Register = () => {
 
     const handleRegister = e => {
         e.preventDefault();
+        const name = e.target.name.value;
         const email = e.target.email.value;
         const password = e.target.password.value;
         const accepted = e.target.terms.checked;
-        console.log(email, password, accepted)
+        console.log(name, email, password, accepted)
 
         setErrorRegister('');
         setRegisterSuccess('');
@@ -42,6 +43,12 @@ const Register = () => {
             console.log(result.user);
             setRegisterSuccess("User created successfully");
 
+            updateProfile(result.user, {
+              displayName: name,
+            })
+            .then( () => console.log('Profile updated'))
+            .catch()
+
 
             sendEmailVerification(result.user)
             .then(() => {
@@ -60,6 +67,9 @@ const Register = () => {
     <div className="text-center my-5">
       <h2 className="text-4xl font-bold">Please Register</h2>
       <form onSubmit={handleRegister} className="w-1/4 mx-auto border p-4 rounded-lg bg-gray-100 space-y-5 my-5">
+        <label className="input input-bordered flex items-center gap-2">
+          <input type="text" name="name" className="grow" placeholder="Your Name" />
+        </label>
         <label className="input input-bordered flex items-center gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
