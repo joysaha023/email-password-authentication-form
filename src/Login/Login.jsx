@@ -42,6 +42,7 @@ const Login = () => {
             console.log('Please provide an email', )
             return
         }
+        //password velidattion
         else if(!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)){
                 console.log('plese write a valid email')
                 return;
