@@ -39,13 +39,14 @@ const Register = () => {
             console.log(result.user);
             setRegisterSuccess("User created successfully");
 
+            //profile updated
             updateProfile(result.user, {
               displayName: name,
             })
             .then( () => console.log('Profile updated'))
             .catch()
 
-
+            //Email verification
             sendEmailVerification(result.user)
             .then(() => {
               alert('Check your email and verify mail')
